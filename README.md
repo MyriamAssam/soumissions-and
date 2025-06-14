@@ -59,3 +59,4 @@ Je cherche des opportunités dans le développement ou le soutien technique, id�
 - **Outils** : Git, GitHub, Postman, VSCode
 
 ---
+Merci de votre visite ! N'hésitez pas à me contacter pour toute opportunité ou collaboration.
