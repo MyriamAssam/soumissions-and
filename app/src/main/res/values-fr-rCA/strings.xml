@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+        <string name="app_name">App Soumission</string>
+        <string name="error_empty_fields">Veuillez remplir tous les champs</string>
+        <string name="error_invalid_email">Courriel invalide</string>
+        <string name="error_wrong_role">Rôle incorrect. </string>
+
+        <string name="error_login">Erreur de connexion</string>
+        <string name="welcome">Bienvenue %1$s</string>
+        <string name="hint_email">Courriel</string>
+        <string name="creer_soumission">Créer une soumission</string>
+        <string name="hint_password">Mot de passe</string>
+        <string name="btn_client">Client</string>
+        <string name="btn_employe">Employé</string>
+        <string name="btn_connexion">Connexion</string>
+        <string name="title_connexion">Connexion</string>
+        <string name="title_inscription">Inscription</string>
+
+        <string name="hint_address">Adresse</string>
+        <string name="hint_phone">Numéro de téléphone</string>
+        <string name="hint_firstname">Prénom</string>
+
+        <string name="btn_inscription">Inscription</string>
+
+        <string name="error_phone_format">Format téléphone : 123-123-4567</string>
+        <string name="success_signup">Inscription réussie !</string>
+        <string name="error_signup">Erreur : %1$s</string>
+
+        <string-array name="travaux_array">
+                <item>portes et fenêtres</item>
+                <item>extérieur</item>
+                <item>salle de bain</item>
+                <item>toiture</item>
+                <item>plancher</item>
+                <item>climatisation</item>
+                <item>électricité</item>
+                <item>plomberie</item>
+                <item>cuisine</item>
+                <item>peinture</item>
+        </string-array>
+
+        <string name="prenom_label">PRÉNOM :</string>
+        <string name="email_label">EMAIL :</string>
+        <string name="adresse_label">ADRESSE :</string>
+        <string name="telephone_label">TÉLÉPHONE :</string>
+        <string name="description_label">DESCRIPTION :</string>
+        <string name="travaux_label">TRAVAUX :</string>
+        <string name="date_label">DATE ET HEURE :</string>
+        <string name="note_label">NOTE :</string>
+        <string name="voir_notes">Voir les notes</string>
+        <string name="modifier_soumission">Modifier Soumission</string>
+        <string name="creer_autre_soumission">Créer une autre soumission</string>
+        <string name="supprimer_soumission">Supprimer soumission</string>
+        <string name="infos_soumission">Infos de la soumission</string>
+        <string name="sauvegarder_note">Sauvegarder la note</string>
+        <string name="mes_soumissions">Mes soumissions</string>
+        <string name="toutes_soumissions">Toutes les soumissions</string>
+        <string name="btn_deconnexion">Déconnexion</string>
+        <string name="note_vide">Note vide</string>
+        <string name="note_sauvegardee">Note sauvegardée</string>
+        <string name="soumission_supprimee">Soumission supprimée</string>
+        <string name="erreur">Erreur :</string>
+        <string name="travaux_inconnus">Travaux inconnus</string>
+        <string name="aucun_travaux">Aucun</string>
+        <string name="ajout_soumission_titre">Ajout d\'une soumission</string>
+        <string name="types_travaux">Types de travaux</string>
+
+        <string name="ajouter">Ajouter</string>
+
+        <string name="success_ajout_soumission">Soumission ajoutée !</string>
+        <string name="error_ajout_soumission">Erreur lors de l\'ajout de la soumission</string>
+
+        <string name="hint_description">Description</string>
+        <string name="modifier">Modifier</string>
+        <string name="retour_infos">Retour aux infos</string>
+        <string name="date_invalide">Date invalide</string>
+
+
+        <string name="error_empty_description">Veuillez entrer une description</string>
+        <string name="success_modification">Soumission modifiée !</string>
+        <string name="voir_mes_soumissions">Voir mes soumissions</string>
+        <string name="travaux_affichage">Travaux : %1$s</string>
+        <string name="client_affichage">Client : %1$s</string>
+        <string name="voir_toutes_soumissions">Voir toutes les soumissions</string>
+        <string name="supprimer">Supprimer</string>
+        <string name="hint_note">Notes</string>
+        <string name="note_ajoutee">Note ajoutée</string>
+        <string name="note_modifiee">Note modifiée</string>
+        <string name="error_note_vide">Veuillez entrer une note</string>
+        <string name="error_suppression">Erreur lors de la suppression</string>
+        <string name="error_modification">Erreur modification</string>
+        <string name="error_ajout">Erreur ajout</string>
+        <string name="error_chargement_notes">Erreur chargement des notes</string>
+        <string name="error_chargement_client">Erreur chargement clientId</string>
+        <string name="main_title">Vos soumissions à portée de main !</string>
+        <string name="main_subtitle">Connectez-vous ou inscrivez-vous pour commencer</string>
+        <string name="change_lang">English / Français</string>
+
+</resources>

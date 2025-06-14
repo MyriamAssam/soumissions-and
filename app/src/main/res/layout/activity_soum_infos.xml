@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f3afed"
+    tools:context=".SoumInfosActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Titre -->
+        <TextView
+            android:id="@+id/textView21"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/infos_soumission"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Lignes alignées -->
+        <!-- Prénom -->
+        <FrameLayout
+            android:id="@+id/row_prenom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include layout="@layout/row_label_value"/>
+        </FrameLayout>
+
+        <include layout="@layout/row_label_value"
+            android:id="@+id/row_email"/>
+        <!-- Téléphone -->
+        <include layout="@layout/row_label_value"
+            android:id="@+id/row_telephone"/>
+        <!-- Adresse -->
+        <include layout="@layout/row_label_value"
+            android:id="@+id/row_adresse"/>
+        <!-- Description -->
+        <include layout="@layout/row_label_value"
+            android:id="@+id/row_description"/>
+        <!-- Travaux -->
+        <include layout="@layout/row_label_value"
+            android:id="@+id/row_travaux"/>
+        <!-- Date -->
+        <include layout="@layout/row_label_value"
+            android:id="@+id/row_date"/>
+
+        <!-- Note -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/note_label"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"/>
+        <EditText
+            android:id="@+id/et_notes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:minHeight="70dp"
+            android:background="@android:drawable/edit_text"/>
+
+        <!-- Boutons -->
+        <Button
+            android:id="@+id/button13"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sauvegarder_note"
+            android:layout_marginTop="12dp"
+            app:backgroundTint="#f56be9" />
+
+        <Button
+            android:id="@+id/btn_voir"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/voir_notes"
+            android:layout_marginTop="8dp"
+            app:backgroundTint="#f56be9" />
+
+        <Button
+            android:id="@+id/btn_soumisModi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/modifier_soumission"
+            android:layout_marginTop="8dp"
+            app:backgroundTint="#f56be9" />
+
+        <Button
+            android:id="@+id/btn_supprimer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/soumission_supprimee"
+            android:layout_marginTop="16dp"
+            app:backgroundTint="#f56be9" />
+
+        <Button
+            android:id="@+id/btn_soumisAdd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/creer_autre_soumission"
+            android:layout_marginTop="8dp"
+            app:backgroundTint="#f56be9" />
+
+        <Button
+            android:id="@+id/btn_soumis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/mes_soumissions"
+            android:layout_marginTop="16dp"
+            app:backgroundTint="#f56be9" />
+
+        <Button
+            android:id="@+id/button16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/toutes_soumissions"
+            android:layout_marginTop="8dp"
+            app:backgroundTint="#f56be9" />
+
+        <Button
+            android:id="@+id/btn_deconnexion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_deconnexion"
+            android:layout_marginTop="16dp"
+            app:backgroundTint="#f56be9" />
+
+    </LinearLayout>
+</ScrollView>

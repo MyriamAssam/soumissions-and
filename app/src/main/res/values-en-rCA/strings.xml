@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Quote App</string>
+
+    <string name="error_wrong_role">Wrong role. </string>
+    <string name="error_login">Login error</string>
+    <string name="welcome">Welcome %1$s</string>
+
+
+    <string name="btn_connexion">Login</string>
+    <string name="title_connexion">Login</string>
+    <string name="title_inscription">Sign Up</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_address">Address</string>
+    <string name="hint_phone">Phone number</string>
+    <string name="hint_firstname">First name</string>
+    <string name="btn_employe">Employee</string>
+    <string name="btn_client">Client</string>
+    <string name="btn_inscription">Register</string>
+    <string name="error_empty_fields">Please fill in all fields.</string>
+    <string name="error_invalid_email">Invalid email address.</string>
+    <string name="error_phone_format">Phone format: 123-123-4567</string>
+    <string name="success_signup">Registration successful!</string>
+    <string name="error_signup">Error: %1$s</string>
+
+    <string name="prenom_label">FIRST NAME:</string>
+    <string name="email_label">EMAIL:</string>
+    <string name="adresse_label">ADDRESS:</string>
+    <string name="telephone_label">PHONE:</string>
+
+    <string name="date_label">DATE AND TIME:</string>
+    <string name="note_label">NOTE:</string>
+    <string name="voir_notes">View notes</string>
+    <string name="modifier_soumission">Edit quote</string>
+    <string name="creer_autre_soumission">Create another quote</string>
+    <string name="supprimer_soumission">Delete quote</string>
+    <string name="infos_soumission">Quote details</string>
+    <string name="sauvegarder_note">Save note</string>
+    <string name="mes_soumissions">My quotes</string>
+    <string name="toutes_soumissions">All quotes</string>
+    <string name="btn_deconnexion">Logout</string>
+    <string name="note_vide">Empty note</string>
+    <string name="note_sauvegardee">Note saved</string>
+    <string name="soumission_supprimee">Quote deleted</string>
+    <string name="erreur">Error:</string>
+    <string name="date_invalide">Invalid date</string>
+    <string name="aucun_travaux">None</string>
+    <string name="ajout_soumission_titre">Add a quote</string>
+    <string name="types_travaux">Type of work</string>
+
+
+
+    <string name="success_ajout_soumission">Quote added!</string>
+    <string name="error_ajout_soumission">Error adding quote</string>
+    <string name="travaux_label">TYPE OF WORK:</string>
+    <string name="description_label">DESCRIPTION:</string>
+    <string name="hint_description">Description</string>
+
+    <string name="error_empty_description">Please enter a description</string>
+    <string name="success_modification">Quote updated!</string>
+    <string name="voir_mes_soumissions">View my quotes</string>
+    <string name="travaux_affichage">Work: %1$s</string>
+    <string name="client_affichage">Client: %1$s</string>
+    <string name="retour_infos">Back to info</string>
+    <string name="ajouter">Add</string>
+    <string name="modifier">Edit</string>
+    <string name="supprimer">Delete</string>
+    <string name="hint_note">Notes</string>
+    <string name="note_ajoutee">Note added</string>
+    <string name="note_modifiee">Note edited</string>
+    <string name="error_note_vide">Please enter a note</string>
+    <string name="error_suppression">Error deleting note</string>
+    <string name="error_modification">Error editing note</string>
+    <string name="error_ajout">Error adding note</string>
+    <string name="error_chargement_notes">Error loading notes</string>
+    <string name="error_chargement_client">Error loading client ID</string>
+    <string name="creer_soumission">Create a quote</string>
+    <string name="voir_toutes_soumissions">See all the quotes</string>
+    <string-array name="travaux_array">
+        <item>doors and windows</item>
+        <item>exterior</item>
+        <item>bathroom</item>
+        <item>roofing</item>
+        <item>flooring</item>
+        <item>air conditioning</item>
+        <item>electricity</item>
+        <item>plumbing</item>
+        <item>kitchen</item>
+        <item>painting</item>
+    </string-array>
+    <string name="main_title">Your quotes at your fingertips!</string>
+    <string name="main_subtitle">Log in or sign up to get started</string>
+    <string name="change_lang">Français / English</string>
+    <string name="travaux_inconnus">Invalid work type</string>
+</resources>

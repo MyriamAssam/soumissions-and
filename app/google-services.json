@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "15287159940",
+    "project_id": "appsoumission",
+    "storage_bucket": "appsoumission.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:15287159940:android:7314fb16c0fa02d3c146d1",
+        "android_client_info": {
+          "package_name": "com.example.app_soumission"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnwHAeT05ZHjHQ88Pe6wHhisnbWXrVk7A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
