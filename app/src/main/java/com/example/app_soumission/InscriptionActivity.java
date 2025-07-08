@@ -1,3 +1,4 @@
+
 package com.example.app_soumission;
 
 import android.annotation.SuppressLint;
@@ -10,15 +11,21 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.LocaleList;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-import java.util.HashMap;
+
 import java.util.Locale;
-import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import com.example.app_soumission.RegisterResponse;
+import com.example.app_soumission.User;
+
 
 public class InscriptionActivity extends AppCompatActivity {
 
@@ -28,16 +35,14 @@ public class InscriptionActivity extends AppCompatActivity {
     String type = "";
     final boolean[] isEmploye = {false};
 
-    FirebaseAuth mAuth;
-    FirebaseFirestore db;
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleHelper.setLocale(newBase));
     }
+
     @SuppressLint("StringFormatInvalid")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Appliquer la langue enregistrée
         SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
         String lang = prefs.getString("lang", "fr");
         setLocaleIfUserChose(lang);
@@ -45,18 +50,55 @@ public class InscriptionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inscription);
 
-        editTextText3 = findViewById(R.id.editTextText3);
-        editTextText4 = findViewById(R.id.editTextText4);
-        editTextText5 = findViewById(R.id.editTextText5);
+        editTextText3 = findViewById(R.id.editTextText3); // Email
+        editTextText4 = findViewById(R.id.editTextText4); // Mot de passe
+        editTextText5 = findViewById(R.id.editTextText5); // Adresse
         editTextText6 = findViewById(R.id.editTextText6);
-        editTextText7 = findViewById(R.id.editTextText7);
-        spinner = findViewById(R.id.spinner);
-        button7 = findViewById(R.id.button7);
-        button8 = findViewById(R.id.button8);
-        buttonInscription = findViewById(R.id.buttonInscription);
+        editTextText6.addTextChangedListener(new TextWatcher() {
+            private String current = "";
+            private boolean isFormatting;
 
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (isFormatting) return;
+
+                String input = s.toString();
+                if (input.equals(current)) return;
+
+                isFormatting = true;
+
+                // Supprimer les caractères non numériques
+                String digits = input.replaceAll("\\D", "");
+
+                // Appliquer le format
+                StringBuilder formatted = new StringBuilder();
+                int len = digits.length();
+                for (int i = 0; i < len && i < 10; i++) {
+                    if (i == 3 || i == 6) {
+                        formatted.append('-');
+                    }
+                    formatted.append(digits.charAt(i));
+                }
+
+                current = formatted.toString();
+                editTextText6.setText(current);
+                editTextText6.setSelection(current.length());
+                isFormatting = false;
+            }
+        });
+
+// Téléphone
+        editTextText7 = findViewById(R.id.editTextText7); // Prénom
+        spinner = findViewById(R.id.spinner);
+        button7 = findViewById(R.id.button7); // Employé
+        button8 = findViewById(R.id.button8); // Client
+        buttonInscription = findViewById(R.id.buttonInscription);
 
         spinner.setVisibility(View.GONE);
 
@@ -72,7 +114,19 @@ public class InscriptionActivity extends AppCompatActivity {
             button8.setBackgroundColor(getResources().getColor(R.color.bleu));
             button7.setBackgroundColor(Color.parseColor("#62a4e6"));
         });
+        EditText mdpEdit = findViewById(R.id.editTextText4);
+        ImageView ivShowHidePassword = findViewById(R.id.ivShowHidePassword);
 
+        ivShowHidePassword.setOnClickListener(v -> {
+            if (mdpEdit.getInputType() == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
+                mdpEdit.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                ivShowHidePassword.setImageResource(R.drawable.eye_opened);
+            } else {
+                mdpEdit.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                ivShowHidePassword.setImageResource(R.drawable.eye_closed);
+            }
+            mdpEdit.setSelection(mdpEdit.getText().length()); // 🔥 pour garder le curseur à la fin
+        });
         button8.setOnClickListener(v -> {
             isEmploye[0] = false;
             spinner.setVisibility(View.GONE);
@@ -87,6 +141,7 @@ public class InscriptionActivity extends AppCompatActivity {
             String motDePasse = editTextText4.getText().toString();
             String adresse = editTextText5.getText().toString();
             String telephone = editTextText6.getText().toString();
+            String specialite = isEmploye[0] ? spinner.getSelectedItem().toString() : null;
 
             if (prenom.isEmpty() || email.isEmpty() || motDePasse.isEmpty() || adresse.isEmpty() || telephone.isEmpty()) {
                 Toast.makeText(getApplicationContext(), getString(R.string.error_empty_fields), Toast.LENGTH_SHORT).show();
@@ -98,64 +153,75 @@ public class InscriptionActivity extends AppCompatActivity {
                 return;
             }
 
-            if (!telephone.matches("\\d{3}-\\d{3}-\\d{4}")) {
+            if (!telephone.matches("\\d{3}-\\d{3}-\\d{4}"))
+            {
                 Toast.makeText(getApplicationContext(), getString(R.string.error_phone_format), Toast.LENGTH_SHORT).show();
                 return;
             }
+            if (!isPasswordValid(motDePasse)) {
+                Toast.makeText(getApplicationContext(), getString(R.string.password_rule), Toast.LENGTH_LONG).show();
+                return;
+            }
+            ApiService apiService = ApiClient.getRetrofit().create(ApiService.class);
 
-            mAuth.createUserWithEmailAndPassword(email, motDePasse)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            if (user != null) {
-                                Map<String, Object> userMap = new HashMap<>();
-                                userMap.put("prenom", prenom);
-                                userMap.put("email", email);
-                                userMap.put("adresse", adresse);
-                                userMap.put("telephone", telephone);
-                                userMap.put("role", type);
-                                if (isEmploye[0]) {
-                                    String specialite = spinner.getSelectedItem().toString();
-                                    userMap.put("specialite", specialite);
-                                }
+            RegisterRequest registerRequest = new RegisterRequest(prenom, email, motDePasse, adresse, telephone, type, specialite);
 
-                                db.collection("users").document(user.getUid()).set(userMap)
-                                        .addOnSuccessListener(unused -> {
-                                            Toast.makeText(getApplicationContext(), getString(R.string.success_signup), Toast.LENGTH_SHORT).show();
+            apiService.register(registerRequest).enqueue(new Callback<UserResponse>() {
+                @Override
+                public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        UserResponse userResponse = response.body();
 
-                                            SharedPreferences.Editor editor = prefs.edit();
-                                            editor.putString("role", type);
-                                            editor.putString("prenom", prenom);
-                                            editor.apply();
+                        SharedPreferences.Editor editor = prefs.edit();
+                        User user = userResponse.getUser();
+                        editor.putString("userId", user.getId());
+                        editor.putString("prenom", user.getPrenom());
+                        editor.putString("email", user.getEmail());
+                        editor.putString("adresse", user.getAdresse());
+                        editor.putString("telephone", user.getTelephone());
+                        editor.putString("role", user.getRole());
+                        editor.putString("specialite", user.getSpecialite());
+                        editor.putString("token", userResponse.getToken());
 
-                                            Intent intent;
-                                            if ("client".equals(type)) {
-                                                intent = new Intent(this, AjoutSoumissionActivity.class);
-                                            } else {
-                                                intent = new Intent(this, SoumissionsActivity.class);
-                                                intent.putExtra("specialite", userMap.get("specialite").toString());
-                                            }
+                        editor.apply();
 
-                                            intent.putExtra("userId", user.getUid());
-                                            intent.putExtra("prenom", prenom);
-                                            intent.putExtra("email", email);
-                                            intent.putExtra("adresse", adresse);
-                                            intent.putExtra("telephone", telephone);
-                                            intent.putExtra("role", type);
-
-                                            startActivity(intent);
-                                            finish();
-                                        });
-
-                            }
+                        Intent intent;
+                        if ("client".equals(type)) {
+                            intent = new Intent(InscriptionActivity.this, AjoutSoumissionActivity.class);
                         } else {
-                            Toast.makeText(getApplicationContext(),
-                                    getString(R.string.error_signup, task.getException().getMessage()),
-                                    Toast.LENGTH_SHORT).show();
+                            intent = new Intent(InscriptionActivity.this, SoumissionsActivity.class);
+                            intent.putExtra("specialite", userResponse.getSpecialite());
                         }
-                    });
+
+                        intent.putExtra("userId", userResponse.getUserId());
+                        intent.putExtra("prenom", userResponse.getPrenom());
+                        intent.putExtra("email", userResponse.getEmail());
+                        intent.putExtra("adresse", userResponse.getAdresse());
+                        intent.putExtra("telephone", userResponse.getTelephone());
+                        intent.putExtra("role", userResponse.getRole());
+
+                        startActivity(intent);
+                        finish();
+
+                    } else {
+                        Toast.makeText(InscriptionActivity.this, "Échec de l'inscription : " + response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<UserResponse> call, Throwable t) {
+                    Toast.makeText(InscriptionActivity.this, "Erreur serveur : " + t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+
+
         });
     }
+
+    private boolean isPasswordValid(String password) {
+        return password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&/\\\\(){}#^+=._-])[A-Za-z\\d@$!%*?&/\\\\(){}#^+=._-]{8,}$");
+    }
+
 
     private void setLocaleIfUserChose(String langCode) {
         if (langCode == null || langCode.isEmpty()) return;
@@ -175,4 +241,3 @@ public class InscriptionActivity extends AppCompatActivity {
         }
     }
 }
-

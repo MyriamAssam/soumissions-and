@@ -5,12 +5,15 @@
     <string name="error_wrong_role">Wrong role. </string>
     <string name="error_login">Login error</string>
     <string name="welcome">Welcome %1$s</string>
+    <string name="password_rule">The password must contain at least 8 caracters, one uppercasae, one lowercase, one number and one special caracter.</string>
 
-
+    <string name="error_missing_profile_info">Informations du profil manquantes. Veuillez réessayer ou vous reconnecter.</string>
+    <string name="modification_info_site">To edit your profile, go to the website</string>
     <string name="btn_connexion">Login</string>
     <string name="title_connexion">Login</string>
     <string name="title_inscription">Sign Up</string>
     <string name="hint_email">Email</string>
+    <string name="selection_type">Select work type</string>
     <string name="hint_password">Password</string>
     <string name="hint_address">Address</string>
     <string name="hint_phone">Phone number</string>
@@ -30,7 +33,7 @@
     <string name="telephone_label">PHONE:</string>
 
     <string name="date_label">DATE AND TIME:</string>
-    <string name="note_label">NOTE:</string>
+    <string name="note_label">NOTES :</string>
     <string name="voir_notes">View notes</string>
     <string name="modifier_soumission">Edit quote</string>
     <string name="creer_autre_soumission">Create another quote</string>

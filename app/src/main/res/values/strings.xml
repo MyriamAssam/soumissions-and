@@ -1,14 +1,16 @@
 <resources>
     <string name="app_name">App Soumission</string>
+    <string name="password_rule">Le mot de passe doit contenir au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial.</string>
 
     <string name="error_wrong_role">Rôle incorrect.</string>
-
+    <string name="error_missing_profile_info">Informations du profil manquantes. Veuillez réessayer ou vous reconnecter.</string>
     <string name="error_login">Erreur de connexion</string>
+    <string name="modification_info_site">Pour modifier votre profil, veuillez vous rendre sur le site web.</string>
     <string name="welcome">Bienvenue %1$s</string>
     <string name="main_title">Vos soumissions à portée de main !</string>
     <string name="main_subtitle">Connectez-vous ou inscrivez-vous pour commencer</string>
     <string name="change_lang">English / Français</string>
-
+    <string name="selection_type">Sélection type de travaux</string>
     <string name="btn_connexion">Connexion</string>
     <string name="title_connexion">Connexion</string>
     <string name="title_inscription">Inscription</string>
@@ -45,7 +47,7 @@
     <string name="description_label">DESCRIPTION :</string>
     <string name="travaux_label">TRAVAUX :</string>
     <string name="date_label">DATE ET HEURE :</string>
-    <string name="note_label">NOTE :</string>
+    <string name="note_label">NOTES :</string>
     <string name="voir_notes">Voir les notes</string>
     <string name="modifier_soumission">Modifier Soumission</string>
     <string name="creer_autre_soumission">Créer une autre soumission</string>

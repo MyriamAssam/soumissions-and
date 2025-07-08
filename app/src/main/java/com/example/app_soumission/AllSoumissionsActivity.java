@@ -6,12 +6,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.firebase.firestore.*;
 import java.util.*;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AllSoumissionsActivity extends AppCompatActivity {
 
-    FirebaseFirestore db;
     Button buttonMesSoumissions, buttonDeconnexion;
 
     @Override
@@ -24,33 +26,30 @@ public class AllSoumissionsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_soumissions);
 
-        db = FirebaseFirestore.getInstance();
+        SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        String token = prefs.getString("token", "");
+        String role = prefs.getString("role", "");
+
         buttonMesSoumissions = findViewById(R.id.button14);
         buttonDeconnexion = findViewById(R.id.button17);
 
-        db.collection("soumissions")
-                .whereEqualTo("lectureGlobale", true)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<Soumission> liste = new ArrayList<>();
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        Soumission s = new Soumission();
-                        s.setId(doc.getId());
-                        s.setTravaux(Collections.singletonList(doc.getString("typeTravaux")));
-                        s.setPrenomClient(doc.getString("clientPrenom"));
-                        s.setEmail(doc.getString("clientEmail"));
-                        s.setAdresse(doc.getString("clientAdresse"));
-                        s.setTelephone(doc.getString("clientTelephone"));
-                        s.setDescription(doc.getString("description"));
-                        s.setDate(doc.getTimestamp("date") != null ? doc.getTimestamp("date").toDate() : null);
-                        s.setClientId(doc.getString("clientId"));
-                        liste.add(s);
+        ApiService apiService = ApiClient.getRetrofit().create(ApiService.class);
+        apiService.getAllSoumissions("Bearer " + token)
+                .enqueue(new Callback<SoumissionListResponse>() {
+                    @Override
+                    public void onResponse(Call<SoumissionListResponse> call, Response<SoumissionListResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            afficherToutesSoumissions(response.body().getSoumissions(), role);
+                        } else {
+                            Toast.makeText(AllSoumissionsActivity.this, getString(R.string.erreur), Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    afficherToutesSoumissions(liste);
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, getString(R.string.erreur) + " " + e.getMessage(), Toast.LENGTH_SHORT).show()
-                );
+
+                    @Override
+                    public void onFailure(Call<SoumissionListResponse> call, Throwable t) {
+                        Toast.makeText(AllSoumissionsActivity.this, "Erreur : " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         buttonMesSoumissions.setText(getString(R.string.voir_mes_soumissions));
         buttonDeconnexion.setText(getString(R.string.btn_deconnexion));
@@ -72,7 +71,7 @@ public class AllSoumissionsActivity extends AppCompatActivity {
         return dateFormat.format(date);
     }
 
-    private void afficherToutesSoumissions(List<Soumission> liste) {
+    private void afficherToutesSoumissions(List<Soumission> liste, String role) {
         List<String> affichages = new ArrayList<>();
         for (Soumission s : liste) {
             String item = getString(R.string.travaux_affichage, s.getTravaux().get(0)) + "\n" +
@@ -88,11 +87,10 @@ public class AllSoumissionsActivity extends AppCompatActivity {
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Soumission soum = liste.get(position);
             Intent intent = new Intent(AllSoumissionsActivity.this, SoumInfosActivity.class);
-            SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
 
             intent.putExtra("soumissionId", soum.getId());
             intent.putExtra("prenom", soum.getPrenomClient());
-            intent.putExtra("role", prefs.getString("role", ""));
+            intent.putExtra("role", role);
             intent.putExtra("clientId", soum.getClientId());
             intent.putExtra("email", soum.getEmail());
             intent.putExtra("adresse", soum.getAdresse());
@@ -104,5 +102,4 @@ public class AllSoumissionsActivity extends AppCompatActivity {
             startActivity(intent);
         });
     }
-
 }

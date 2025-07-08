@@ -8,24 +8,22 @@ import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.Timestamp;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
+
+import retrofit2.Call;
 
 public class SoumInfosActivity extends AppCompatActivity {
 
     FirebaseFirestore db;
     private String clientId;
-
+ 
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleHelper.setLocale(newBase));
     }
 
-    // ✅ ✅ ✅  AJOUTE-LA ICI (en dehors de onCreate)
     private void setRowContent(int rowId, String labelText, String valueText) {
         View row = findViewById(rowId);
         TextView label = row.findViewById(R.id.label);
@@ -47,9 +45,9 @@ public class SoumInfosActivity extends AppCompatActivity {
         Button btn_soumisAdd = findViewById(R.id.btn_soumisAdd);
         Button btnSupprimer = findViewById(R.id.btn_supprimer);
         Button btnVoir = findViewById(R.id.btn_voir);
-        Button btnSauvegarder = findViewById(R.id.button13);
+
         Button btnall = findViewById(R.id.button16);
-        EditText etNote = findViewById(R.id.et_notes);
+
 
         Intent intent = getIntent();
         String soumissionId = intent.getStringExtra("soumissionId");
@@ -67,7 +65,6 @@ public class SoumInfosActivity extends AppCompatActivity {
                 ? String.join(", ", travauxArray)
                 : getString(R.string.aucun_travaux);
 
-        // ✅ Affichage dynamique avec alignement propre
         setRowContent(R.id.row_prenom, getString(R.string.prenom_label), prenom);
         setRowContent(R.id.row_email, getString(R.string.email_label), email);
         setRowContent(R.id.row_adresse, getString(R.string.adresse_label), adresse);
@@ -86,13 +83,31 @@ public class SoumInfosActivity extends AppCompatActivity {
             setRowContent(R.id.row_date, getString(R.string.date_label), dateFormat.format(date));
         }
 
+        String employeurId = intent.getStringExtra("employeurId");
+
+// existing prefs
         SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        String currentUserId = prefs.getString("userId", "");
         String currentRole = prefs.getString("role", "");
 
-        if (currentRole.equals("employé")) {
+        if ("employé".equals(currentRole)) {
             btn_soumisModi.setVisibility(View.GONE);
             btn_soumisAdd.setVisibility(View.GONE);
+
+            String specialite = prefs.getString("specialite", "");
+
+            // Check if this soumission's travaux includes the employee's specialite
+            List<String> travauxList = Arrays.asList(travauxArray != null ? travauxArray : new String[]{});
+            if (!travauxList.contains(specialite)) {
+                btnSupprimer.setVisibility(View.GONE); // hide delete if not their specialty
+            }
+        } else if ("client".equals(currentRole)) {
+            if (!currentUserId.equals(clientId)) {
+                btn_soumisModi.setVisibility(View.GONE);
+                btnSupprimer.setVisibility(View.GONE);
+            }
         }
+
 
         btnVoir.setOnClickListener(v -> {
             Intent intentVoir = new Intent(SoumInfosActivity.this, NotesActivity.class);
@@ -116,47 +131,30 @@ public class SoumInfosActivity extends AppCompatActivity {
         btn_soumisAdd.setOnClickListener(v -> startActivity(new Intent(this, AjoutSoumissionActivity.class)));
 
         btnSupprimer.setOnClickListener(v -> {
-            db.collection("soumissions").document(soumissionId).delete()
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(this, getString(R.string.soumission_supprimee), Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(this, SoumissionsActivity.class));
-                        finish();
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(this, getString(R.string.erreur) + " " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            String token = prefs.getString("token", "");
+            ApiService apiService = ApiClient.getRetrofit().create(ApiService.class);
+            apiService.deleteSoumission(soumissionId, "Bearer " + token)
+                    .enqueue(new retrofit2.Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
+                            if (response.isSuccessful()) {
+                                Toast.makeText(SoumInfosActivity.this, getString(R.string.soumission_supprimee), Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(SoumInfosActivity.this, SoumissionsActivity.class));
+                                finish();
+                            } else {
+                                Toast.makeText(SoumInfosActivity.this, getString(R.string.erreur), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Toast.makeText(SoumInfosActivity.this, "Erreur : " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
         });
 
-        btnSauvegarder.setOnClickListener(v -> {
-            String note = etNote.getText().toString().trim();
-            if (note.isEmpty()) {
-                Toast.makeText(this, getString(R.string.note_vide), Toast.LENGTH_SHORT).show();
-                return;
-            }
 
-            Map<String, Object> noteData = new HashMap<>();
-            noteData.put("note", note);
-            noteData.put("role", role);
-            noteData.put("timestamp", Timestamp.now());
-            noteData.put("auteurId", FirebaseAuth.getInstance().getUid());
 
-            String auteur = prefs.getString("prenom", "Inconnu");
-            noteData.put("auteur", auteur);
-
-            db.collection("soumissions")
-                    .document(soumissionId)
-                    .collection("notes")
-                    .add(noteData)
-                    .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(this, getString(R.string.note_sauvegardee), Toast.LENGTH_SHORT).show();
-                        etNote.setText("");
-                        Intent intentVoir = new Intent(SoumInfosActivity.this, NotesActivity.class);
-                        intentVoir.putExtra("soumissionId", soumissionId);
-                        intentVoir.putExtra("role", role);
-                        intentVoir.putExtra("prenom", prenom);
-                        intentVoir.putExtra("clientId", clientId);
-                        startActivity(intentVoir);
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(this, getString(R.string.erreur) + " " + e.getMessage(), Toast.LENGTH_SHORT).show());
-        });
 
         btnDeconnexion.setOnClickListener(v -> {
             Intent intent5 = new Intent(this, MainActivity.class);
@@ -166,3 +164,4 @@ public class SoumInfosActivity extends AppCompatActivity {
         });
     }
 }
+

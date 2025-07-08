@@ -18,9 +18,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.*;
 
+import retrofit2.Call;
+
 public class SoumissionsActivity extends AppCompatActivity {
 
-    FirebaseFirestore db;
+
     SharedPreferences prefs;
 
     @Override
@@ -49,47 +51,58 @@ public class SoumissionsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_soumissions);
 
-        prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
-        String lang = prefs.getString("lang", "fr");
-        setLocale(lang);
+        SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        String userId = prefs.getString("userId", "");
 
-        db = FirebaseFirestore.getInstance();
+        String role = prefs.getString("role", "");
 
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        String role = getIntent().getStringExtra("role");
         String specialite = getIntent().getStringExtra("specialite");
+        String token = prefs.getString("token", "");
+
         Button button19 = findViewById(R.id.button19);
         Button buttonCreerSoumission = findViewById(R.id.buttonCreerSoumission);
         Button btn_dec = findViewById(R.id.btn_dec);
 
-        if (role.equals("client")) {
+        ApiService apiService = ApiClient.getRetrofit().create(ApiService.class);
+
+        if ("client".equals(role)) {
             buttonCreerSoumission.setVisibility(View.VISIBLE);
-
-            db.collection("soumissions")
-                    .whereEqualTo("clientId", userId)
-                    .get()
-                    .addOnSuccessListener(queryDocumentSnapshots -> {
-                        List<Soumission> soumissions = new ArrayList<>();
-                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                            soumissions.add(parseSoumission(doc.getId(), doc.getData()));
+            apiService.getClientSoumissions(userId, "Bearer " + token)
+                    .enqueue(new retrofit2.Callback<SoumissionListResponse>() {
+                        @Override
+                        public void onResponse(Call<SoumissionListResponse> call, retrofit2.Response<SoumissionListResponse> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                afficherSoumissions(response.body().getSoumissions());
+                            } else {
+                                Toast.makeText(SoumissionsActivity.this, "Aucune soumission trouvée", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        afficherSoumissions(soumissions);
+
+                        @Override
+                        public void onFailure(Call<SoumissionListResponse> call, Throwable t) {
+                            Toast.makeText(SoumissionsActivity.this, "Erreur serveur : " + t.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     });
-        } else if (role.equals("employé")) {
+        } else if ("employé".equals(role)) {
             buttonCreerSoumission.setVisibility(View.GONE);
-
-            db.collection("soumissions")
-                    .whereEqualTo("typeTravaux", specialite)
-                    .get()
-                    .addOnSuccessListener(queryDocumentSnapshots -> {
-                        List<Soumission> soumissions = new ArrayList<>();
-                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                            soumissions.add(parseSoumission(doc.getId(), doc.getData()));
+            apiService.getEmployeSoumissions(userId, "Bearer " + token)
+                    .enqueue(new retrofit2.Callback<SoumissionListResponse>() {
+                        @Override
+                        public void onResponse(Call<SoumissionListResponse> call, retrofit2.Response<SoumissionListResponse> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                afficherSoumissions(response.body().getSoumissions());
+                            } else {
+                                Toast.makeText(SoumissionsActivity.this, "Aucune soumission trouvée", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        afficherSoumissions(soumissions);
+
+                        @Override
+                        public void onFailure(Call<SoumissionListResponse> call, Throwable t) {
+                            Toast.makeText(SoumissionsActivity.this, "Erreur serveur : " + t.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     });
         }
+
 
         buttonCreerSoumission.setOnClickListener(v -> {
             Intent intent = new Intent(SoumissionsActivity.this, AjoutSoumissionActivity.class);
@@ -129,6 +142,8 @@ public class SoumissionsActivity extends AppCompatActivity {
             intent.putExtra("travaux", soum.getTravaux().toArray(new String[0]));
             intent.putExtra("date", soum.getDate());
             intent.putExtra("role", getIntent().getStringExtra("role"));
+            intent.putExtra("clientId", soum.getClientId());
+
             startActivity(intent);
         });
     }

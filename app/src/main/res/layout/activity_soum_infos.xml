@@ -52,28 +52,8 @@
             android:id="@+id/row_date"/>
 
         <!-- Note -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/note_label"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
-        <EditText
-            android:id="@+id/et_notes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:minHeight="70dp"
-            android:background="@android:drawable/edit_text"/>
 
         <!-- Boutons -->
-        <Button
-            android:id="@+id/button13"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/sauvegarder_note"
-            android:layout_marginTop="12dp"
-            app:backgroundTint="#f56be9" />
 
         <Button
             android:id="@+id/btn_voir"
@@ -95,8 +75,8 @@
             android:id="@+id/btn_supprimer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/soumission_supprimee"
             android:layout_marginTop="16dp"
+            android:text="@string/supprimer_soumission"
             app:backgroundTint="#f56be9" />
 
         <Button
