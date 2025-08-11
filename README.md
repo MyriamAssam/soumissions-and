@@ -18,7 +18,7 @@ Je cherche des opportunités dans le développement ou le soutien technique, id�
 
 ## 📂 Projets en vedette
 
-### 🔹 Application mobile – Estimation travaux (Stage Bâti Québec)
+### 🔹 Application mobile – Bâti Québec Estimation
 - Plateforme : Android Studio (Java)
 - Fonction : Estimer le coût des rénovations
 - ✔️ Estimation des couts de travaux en fonction des matériaux, des dimensions et du cout de la main d'oeuvre
