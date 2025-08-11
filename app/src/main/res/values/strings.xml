@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">App Soumission</string>
+    <string name="app_name">Bâti Québec Soumissions</string>
     <string name="password_rule">Le mot de passe doit contenir au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial.</string>
 
     <string name="error_wrong_role">Rôle incorrect.</string>

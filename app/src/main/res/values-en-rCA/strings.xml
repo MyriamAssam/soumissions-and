@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Quote App</string>
+    <string name="app_name">Bâti Québec Soumissions</string>
 
     <string name="error_wrong_role">Wrong role. </string>
     <string name="error_login">Login error</string>

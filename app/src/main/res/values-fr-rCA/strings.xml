@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-        <string name="app_name">App Soumission</string>
+        <string name="app_name">Bâti Québec Soumissions</string>
         <string name="error_empty_fields">Veuillez remplir tous les champs</string>
         <string name="error_invalid_email">Courriel invalide</string>
         <string name="error_wrong_role">Rôle incorrect. </string>
