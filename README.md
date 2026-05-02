@@ -10,8 +10,7 @@ Je suis diplômée en informatique (2025) et passionnée par le développement d
 
 Je cherche des opportunités dans le développement ou le soutien technique, idéalement en présentiel ou hybride.
 
-📫 Contact : myriamassamea@hotmail.com  
-🌐 LinkedIn : [linkedin.com/in/myriamassam](https://www.linkedin.com/feed/?trk=public_profile_not-found-log-in_google-one-tap-submit)  
+📫 Contact : myriamassam@outlook.com   
 💻 GitHub : [github.com/MyriamAssam](https://github.com/MyriamAssam/app-soumission)
 
 ---
