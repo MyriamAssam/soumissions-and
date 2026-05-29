@@ -57,11 +57,10 @@ Certaines fonctionnalités connectées au backend ou à la base de données ne s
 
 ---
 
-### 🔹 Site web – JobBang (Projet final a l'école)
+### 🔹 Site web – JobBang (Projet final à l'école)
 - Plateforme : React + MongoDB + Postman API
 - Fonction : Site de recrutement de stages
 - On peut créer des postes, voir les étudiants qui ont postulés et leur informations, changer le status de la demande
-- CSS pas complet, mais toutes les composantes demandées durant les sprints sont là
 - Fait en équipe de 3
   
 ⚠️ Note:
